@@ -1,0 +1,17 @@
+ARG VERSION=0.1.1
+ARG CHECKSUM=sha256:92a4d6b5701f1156e0a1a40b9d3d8c3e4d5c6b7e8f9a0a1b2c3d4e5f6a7b8c9
+
+FROM python:3.12-slim
+
+WORKDIR /usr/src/app
+
+ADD --checksum=${CHECKSUM} \
+    https://github.com/AndreyBychenkow/StaticJinjaPlus/archive/${VERSION}.tar.gz \
+    /tmp/app.tar.gz
+
+RUN tar -xzf /tmp/app.tar.gz --strip-components=1 -C . && \
+    rm /tmp/app.tar.gz && \
+    pip install .
+
+ENTRYPOINT ["staticjinjaplus"]
+CMD ["python", "main.py", "--srcpath", "MyTemplates", "--outpath", "MyAssembly"]
